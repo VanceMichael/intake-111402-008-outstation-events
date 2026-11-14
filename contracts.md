@@ -1,6 +1,6 @@
 # 来源网关契约
 
-GET /static 返回点表；POST /poll 接受 classes；GET /fragments 返回 outstation、association、unsolicited、sequence、FIR、FIN、CON、objects、IIN。POST /confirm 接受 association/sequence/unsolicited。序列号为 4 位，片段身份不可只用序列号。GET /events/history 返回网关审计。IIN.eventBufferOverflow 是来源完整性告警。
+GET /static 返回点表；POST /poll 接受 classes；GET /fragments 返回 outstation、association、unsolicited、sequence、FIR、FIN、CON、objects、IIN。POST /confirm 接受 association/sequence/unsolicited。序列号为 4 位，片段身份不可只用序列号。GET /__audit 返回网关请求与确认状态审计。IIN.eventBufferOverflow 是来源完整性告警。
 
 ## 本地来源操作
 
