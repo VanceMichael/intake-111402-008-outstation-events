@@ -25,6 +25,11 @@ Dockerfile 固定 Node 镜像摘要。首次使用需预载该镜像，运行和
 ## 工程结构
 
 - src/reader.mjs 是当前来源适配器；不修改来源来迎合适配结果。
+  - collect(client) 保留原有静态点表读取，只反映当前值。
+  - collectEvents(client, options) 先按类别轮询，再持续领取片段直到本次取空；按 FIR/FIN 归并整次响应，收到单个片段不代表响应结束。
+  - 事件行随值保存 flags、time 与 sourceTime；IIN 中 buffer overflow 类声明写成独立的 kind:'gap' 缺口行，而不是只留在状态位里。
+  - 片段按 outstation/association/sequence/unsolicited 加内容摘要去重：重连重送的未确认片段只收一次，而同一片段序列号回绕后出现的新事件内容不同，仍按真实事件接收；点位相同、值相同不会合并。
+  - options.commit 是本地可靠收件动作（如 Archive.put）。只在 commit 成功后确认远端片段；未给出 commit 时返回 pending，调用方可靠保存后再 confirmFragments，确认永不早于落盘。
 - src/source.mjs 与 src/behavior.mjs 实现本地来源网关，契约见 contracts.md。
 - src/archive.mjs 保存来源与内容摘要；同内容重收不新增，内容变化保留版本。
 - src/api.mjs 提供收件查询；.state 为运行状态，停止后可删除恢复空收件箱。
